@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}
+{{ tag }} - 
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="tag">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+  <h2>{{ tag }}</h2>
+ 
+	
+	<div class="grid videos random">
+  
+ {% for video in tag_videolist %}
+  <div class="row thumb">
+       
+   	<a href="/videos/{{ video._id }}">
+			<img src="http://img.youtube.com/vi/{{ video._id }}/mqdefault.jpg" class="rounded" height=180 width=320>
+       </a>
+     </div>
+     {% endfor %}
+ 
+  </div>
+	
+	
+	<div class="row tags my-4">
+    
+  <div class="col">
+        <!-- start of loop -->
+        {% for tag in taglist[:12] %}
+       
+    <a href="/tags/{{ tag }}" class="btn btn-primary mb-2">{{ tag }}</a>&nbsp;
+  
+        {% endfor %}
+        <!-- end of loop -->
+    </div>
+ </div>
+	
+	
+	 
+	
+     {% for video in videolist %}
+     {% for info in video.video_info %}
+          <h3>{{ info.name }}</h3>
+          {% endfor %}
+  
+    	<a href="/videos/{{ video._id }}">
+	<img src="http://img.youtube.com/vi/{{ video._id }}/mqdefault.jpg" class="thumbnail">
+       </a>
+     {% endfor %}
+
+{% endblock %}

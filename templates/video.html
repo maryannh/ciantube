@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="video">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+    <div class="row">
+			<div class="col">
+				
+			
+	
+    <div class="embed-responsive embed-responsive-16by9 single-video"> 
+      <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{ video }}?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+    </div>
+				</div>
+  </div>
+  <div class="videos random">
+  
+ {% for video in random_videolist %}
+
+       <div class="thumb">
+		
+		
+   	<a href="/videos/{{ video._id }}">
+			<img src="http://img.youtube.com/vi/{{ video._id }}/mqdefault.jpg" class="rounded">
+       </a>
+	</div>
+     {% endfor %}
+ 
+  </div>
+
+{% endblock %}

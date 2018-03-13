@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}
+{{ channel }}
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="recent">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+	 <h2>
+		Recently Watched
+	</h2>
+<div class="grid videos">
+ 
+ {% for video in recent_videolist[:12] %}
+ 		<div class="item thumb">
+       
+   	<a href="/videos/{{ video }}">
+			<img src="http://img.youtube.com/vi/{{ video }}/mqdefault.jpg" class="rounded">
+       </a>
+     </div>
+     {% endfor %}
+ 
+  </div>
+	
+
+{% endblock %}
