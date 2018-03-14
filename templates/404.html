@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}
+{{ channel }}
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="404">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+	 <h2>
+		We're lost!
+	</h2>
+<div class="photo">
+  <h3>
+    Please try looking for something else.
+  </h3>
+ 
+<img src="{{ url_for('static', filename='images/style.css') }}">
+  
+  <small>Photo by N. on Unsplash</small>
+ 
+  </div>
+	
+
+{% endblock %}
