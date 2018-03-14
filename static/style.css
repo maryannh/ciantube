@@ -7,7 +7,7 @@
   --text: var(--dark);
   --logo: hsl(185, 100%, 20%);
   --bg: hsl(46, 81%, 90%);
-  --columns: 200px 200px 200px;
+  --columns: 300px 300px 300px;
   --base-margin: 30px;
 }
 
@@ -22,7 +22,7 @@ nav {
   margin-bottom: 2em;
 }
 
-.grid {
+/* .grid {
     margin: var(--base-margin) 0;
     grid-template-columns: var(--columns);
     display: grid;
@@ -35,6 +35,19 @@ nav {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+}
+*/
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.grid > * {
+    flex: 1 1 300px;
+    margin-bottom: 2em;
+}
+
 }
 
 p a {
@@ -110,7 +123,7 @@ body.video div.videos div.thumb {
 
 @media all and (max-width: 450px) {
     :root {
-        --columns: 200px;
+        --columns: 300px;
         --base-margin: 15px;
     }
 }
