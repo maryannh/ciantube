@@ -38,6 +38,10 @@ nav {
 }
 */
 
+div.single-video {
+  margin-bottom: 2em;
+}
+
 .grid {
     display: flex;
     flex-wrap: wrap;

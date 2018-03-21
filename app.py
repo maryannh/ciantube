@@ -14,6 +14,10 @@ keen.read_key = "A8B4DC61230BAFC32A7627130B3F702A58FCFD2A96DF525A468ED37E53A857B
 
 user = "5aa10855333361ff705c95b6"
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route('/')
 def index():
     channels = mongo.db.channels
