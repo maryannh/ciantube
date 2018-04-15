@@ -12,4 +12,8 @@ db = client['tube']
 
 user = "5aa10855333361ff705c95b6"
 
-pprint.pprint(db.users.find_one({"_id": ObjectId(user)}, {"_id": 0, "playlist": 1}))
+playlist = db.users.find_one({"_id": ObjectId(user)}, {"_id": 0, "playlist": 1})
+
+playlist_url = playlist.get("playlist")
+
+print(playlist_url)
