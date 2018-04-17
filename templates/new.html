@@ -13,14 +13,15 @@
 <!-- content stuff here -->
 	 <h2>
 		New Videos
-	</h1>
+	</h2>
+    
 <div class="grid videos new">
  
- {% for video in new_videolist[:12] %}
+ {% for video in new_videolist|sort(attribute='contentDetails.videoPublishedAt') %}
   <div class="item thumb">
        
-   	<a href="/videos/{{ video._id }}">
-			<img src="http://img.youtube.com/vi/{{ video._id }}/mqdefault.jpg" class="rounded">
+   	<a href="/videos/{{ video.contentDetails.videoId }}">
+			<img src="http://img.youtube.com/vi/{{ video.contentDetails.videoId }}/mqdefault.jpg" class="rounded">
        </a>
      </div>
      {% endfor %}
