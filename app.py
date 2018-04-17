@@ -31,8 +31,8 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
-    channels = mongo.db.channels
-    videos = mongo.db.videos
+    channels = db.channels
+    videos = db.videos
     url = request.headers.get("Referer")
     ip = request.remote_addr
     keen.add_event("view", { "_id": user, "page": "home", "referrer": url, "ip": ip })
