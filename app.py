@@ -62,7 +62,7 @@ def new():
     r = requests.get(api_url)
     data = r.json()
     keen.add_event("view", { "_id": user, "page": "new", "referrer": url, })
-    new_videolist = list(data['items'])
+    new_videolist = list(data['items']) 
     return render_template('new.html', new_videolist=new_videolist)
   
 @app.route('/recent')
