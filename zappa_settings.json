@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "app_function": "app.app",
+        "aws_region": "eu-west-2",
+        "profile_name": "default",
+        "project_name": "ciantube",
+        "runtime": "python3.6",
+        "s3_bucket": "zappa-m112fxrt0"
+    }
+}
