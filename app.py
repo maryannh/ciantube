@@ -30,6 +30,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 @app.route('/')
+@app.route('/index')
 def index():
     channels = db.channels
     videos = db.videos
