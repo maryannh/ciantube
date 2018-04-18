@@ -13,13 +13,11 @@
 <!-- content stuff here -->
 <div class="grid videos random">
     
-    {{ videos }}
-    
 {% for video in videos[:12] %}
   <div class="item thumb">
        
-   	<a href="dev/videos/{{ video._id }}">
-			<img src="http://img.youtube.com/vi/{{ video._id }}/mqdefault.jpg" class="rounded" height=180 width=320>
+   	<a href="dev/videos/{{ video.contentDetails.videoId }}">
+			<img src="http://img.youtube.com/vi/{{ video.contentDetails.videoId }}/mqdefault.jpg" class="rounded" height=180 width=320>
        </a>
      </div>
      {% endfor %}

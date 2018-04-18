@@ -33,8 +33,7 @@ def page_not_found(e):
 @app.route('/index')
 def index():
     url = request.headers.get("Referer")
-    ip = request.remote_addr
-    keen.add_event("view", { "_id": user, "page": "home", "referrer": url, "ip": ip })
+    keen.add_event("view", { "_id": user, "page": "home", "referrer": url, })
     part = 'contentDetails'
     max_result = "50"
     api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
@@ -59,33 +58,23 @@ def new():
 @app.route('/recent')
 def recent():
     url = request.headers.get("Referer")
-    ip = request.remote_addr
-    keen.add_event("view", { "_id": user, "page": "recent", "referrer": url, "ip": ip })
+    keen.add_event("view", { "_id": user, "page": "recent", "referrer": url, })
     recent_videolist = keen.select_unique("video_view", target_property="page", timeframe="this_7_days")
     return render_template('recent.html', recent_videolist=recent_videolist)
   
-@app.route('/videos/<video>', methods=['GET'])
+@app.route('/dev/videos/<video>', methods=['GET'])
 def video(video):
-    channels = db.channels
-    videos = db.videos
     url = request.headers.get("Referer")
-    ip = request.remote_addr
-    keen.add_event("view", { "_id": user, "page": "video", "referrer": url, "ip": ip })
-    keen.add_event("video_view", { "_id": user, "page": video, "referrer": url, "ip": ip })
-    random_videolist = list(videos.aggregate([{ "$lookup":
-     {
-       "from": "channels",
-       "localField": "channel",
-       "foreignField": "_id",
-       "as": "video_info"
-     }
-    },
-            { "$match": {"_id": { "$ne": video }} },
-                                              
-            { "$sample": { "size": 12 } }                          
-                                      
-     ]))
-    return render_template('video.html', video=video, random_videolist=random_videolist)
+    keen.add_event("view", { "_id": user, "page": "video", "referrer": url,})
+    keen.add_event("video_view", { "_id": user, "page": video, "referrer": url,  })
+    part = 'contentDetails'
+    max_result = "50"
+    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    r = requests.get(api_url)
+    data = r.json()
+    videos = list(data['items'])
+    shuffle(videos)
+    return render_template('video.html', video=video, videos=videos)
   
 @app.route('/tags/<tag>', methods=['GET'])
 def tag(tag):
