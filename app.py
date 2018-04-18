@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
-from random import sample
+from random import shuffle
 import keen
 import json
 import requests
@@ -32,27 +32,17 @@ def page_not_found(e):
 @app.route('/')
 @app.route('/index')
 def index():
-    channels = db.channels
-    videos = db.videos
     url = request.headers.get("Referer")
     ip = request.remote_addr
     keen.add_event("view", { "_id": user, "page": "home", "referrer": url, "ip": ip })
-    tags = list(videos.distinct("tags"))
-    taglist = sample(tags, k=len(tags))
-    random_videolist = list(videos.aggregate([{ "$lookup":
-     {
-       "from": "channels",
-       "localField": "channel",
-       "foreignField": "_id",
-       "as": "video_info"
-     }
-    },
-                                              
-            { "$sample": { "size": 12 } }                          
-                                      
-     ]))
-  
-    return render_template('home.html', taglist=taglist, tags=tags, random_videolist=random_videolist)
+    part = 'contentDetails'
+    max_result = "50"
+    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    r = requests.get(api_url)
+    data = r.json()
+    videos = list(data['items'])
+    shuffle(videos)
+    return render_template('home.html', videos=videos)
   
 @app.route('/new')
 def new():
@@ -68,8 +58,6 @@ def new():
   
 @app.route('/recent')
 def recent():
-    channels = db.channels
-    videos = db.videos
     url = request.headers.get("Referer")
     ip = request.remote_addr
     keen.add_event("view", { "_id": user, "page": "recent", "referrer": url, "ip": ip })
@@ -101,26 +89,6 @@ def video(video):
   
 @app.route('/tags/<tag>', methods=['GET'])
 def tag(tag):
-    channels = db.channels
-    videos = db.videos
-    url = request.headers.get("Referer")
-    ip = request.remote_addr
-    keen.add_event("view", { "_id": user, "page": "tag", "referrer": url, "ip": ip })
-    tags = list(videos.distinct("tags"))
-    taglist = sample(tags, k=len(tags))
-    tag_videolist = list(videos.aggregate([{ "$lookup":
-     {
-       "from": "channels",
-       "localField": "channel",
-       "foreignField": "_id",
-       "as": "video_info"
-     },
-},
-    { "$match" : { "tags" : tag } }    
-                                      
-                                      ]))
-    
-    
     return render_template('tag.html', tag=tag, tag_videolist=tag_videolist, taglist=taglist)
 
 if __name__ == '__main__':

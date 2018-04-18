@@ -12,31 +12,20 @@
 {% block content %}
 <!-- content stuff here -->
 <div class="grid videos random">
-  
- {% for video in random_videolist %}
+    
+    {{ videos }}
+    
+{% for video in videos[:12] %}
   <div class="item thumb">
        
-   	<a href="/videos/{{ video._id }}">
+   	<a href="dev/videos/{{ video._id }}">
 			<img src="http://img.youtube.com/vi/{{ video._id }}/mqdefault.jpg" class="rounded" height=180 width=320>
        </a>
      </div>
      {% endfor %}
+  
+ 
  
   </div>
-	
-	
-  
-  <div class="row tags my-4">
-    
-  <div class="col">
-        <!-- start of loop -->
-        {% for tag in taglist[:12] %}
-       
-    <a href="/tags/{{ tag }}" class="btn btn-primary mb-2">{{ tag }}</a>&nbsp;
-  
-        {% endfor %}
-        <!-- end of loop -->
-    </div>
- </div>
 
 {% endblock %}

@@ -20,7 +20,7 @@
  {% for video in new_videolist|sort(attribute='contentDetails.videoPublishedAt') %}
   <div class="item thumb">
        
-   	<a href="/videos/{{ video.contentDetails.videoId }}">
+   	<a href="dev/videos/{{ video.contentDetails.videoId }}">
 			<img src="http://img.youtube.com/vi/{{ video.contentDetails.videoId }}/mqdefault.jpg" class="rounded">
        </a>
      </div>
