@@ -125,6 +125,20 @@ body.video div.videos div.thumb {
   margin-right: 1em;
 }
 
+div.photo h3 {
+    font-family: var(--header-font);
+  color: var(--logo);
+}
+
+div.photo img {
+    max-width: 600px;
+}
+
+div.photo small {
+    color: var(--logo);
+    display: block;
+}
+
 @media all and (max-width: 450px) {
     :root {
         --columns: 300px;
