@@ -19,6 +19,7 @@ html {
 body {
   font-family: var(--main-font);
   background-color: var(--bg);
+    background: url(images/bg.png);
   color: var(--text);
  margin-bottom: 60px; /* Margin bottom by footer height */
 }
