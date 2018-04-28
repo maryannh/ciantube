@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}
+{{ channel }}
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="success">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+	 <h2>
+		Success
+	</h2>
+<div class="photo success">
+  <h3>
+    Your playlist has been successfully added to CianTube
+  </h3>
+ 
+{{ cookie_value }}
+ 
+  </div>
+	
+
+{% endblock %}
