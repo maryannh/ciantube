@@ -3,6 +3,6 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Hidde
 from wtforms.validators import DataRequired, Regexp, URL
 
 class LoginForm(FlaskForm):
-    playlist = StringField('Playlist', validators=[URL()])
+    playlist = StringField('Playlist:', validators=[URL()])
     remember_me = BooleanField('Remember for next time')
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Add playlist')

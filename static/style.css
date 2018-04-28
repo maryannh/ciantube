@@ -4,6 +4,7 @@
   --highlight: hsl(185, 100%, 35%);
   --dark: hsl(185, 100%, 20%);
   --light: hsl(46, 81%, 62%);
+    --med-light: hsl(46, 81%, 52%);
   --text: var(--dark);
   --logo: var(--dark);
   --bg: hsl(46, 81%, 90%);
@@ -36,6 +37,15 @@ body {
 nav {
   background-color: var(--light);
   margin-bottom: 2em;
+}
+
+nav h1 {
+    width: 100%;
+}
+
+nav h1 .config {
+ margin-left: 0.5em;
+    padding-left: 0.5em;
 }
 
 /* .grid {
@@ -153,6 +163,11 @@ div.photo img {
 div.photo small {
     color: var(--logo);
     display: block;
+}
+
+.form-check-input {
+    margin-left: 0rem;
+    margin-right: 5rem;
 }
 
 @media all and (max-width: 450px) {

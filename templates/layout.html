@@ -39,12 +39,12 @@ window.cookieconsent.initialise({
   
   <nav class="navbar">
     <div class="container">
-       <h1>
+       <h1 class="justify-content-between">
+        <span onclick="goBack()"><i class="fas fa-caret-square-left"></i></span>
          <a href={{ url_for('index') }}>CianTube</a> 
-           <a href={{ url_for('index') }}><i class="fas fa-home"></i></a> 
            <a href={{ url_for('new') }}><i class="fas fa-inbox"></i></a>  
            <a href={{ url_for('recent') }}><i class="fas fa-clock"></i></a> 
-           <span onclick="goBack()"><i class="fas fa-angle-double-left"></i></span>
+            <a href={{ url_for('config') }} class="config text-right"><i class="fas fa-cogs"></i></a>
          
           
          
@@ -56,11 +56,14 @@ window.cookieconsent.initialise({
 
    {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {% for message in messages %}
-            <li>{{ message }}</li>
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
             {% endfor %}
-        </ul>
+        </div>
         {% endif %}
         {% endwith %}
       
