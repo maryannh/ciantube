@@ -42,14 +42,15 @@ def index():
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
-        playlist_url = db.users.find({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url = playlist_url_doc['playlist_url']
     else:
         if 'session_name' in session:
             user = session['session_name']
         else:
             session['session_name'] = token_hex(16)
             user = session['session_name']
-    url_parts = furl(playlist_url) 
+    url_parts = furl(playlist_url)
     playlist_id = url_parts.args['list']
     api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
     r = requests.get(api_url)
@@ -58,7 +59,7 @@ def index():
     shuffle(videos)
     url = request.headers.get("Referer")
     keen.add_event("view", { "_id": user, "page": "home", "referrer": url, })
-    return render_template('home.html', videos=videos, user=user, playlist_url=playlist_url)
+    return render_template('home.html', videos=videos, user=user, playlist_url=playlist_url, url_parts=url_parts, playlist_id=playlist_id)
   
 @app.route('/new')
 def new():
@@ -67,7 +68,8 @@ def new():
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
-        playlist_url = db.users.find({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url = playlist_url_doc['playlist_url']
     else:
         playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
         if 'session_name' in session:
@@ -91,7 +93,8 @@ def recent():
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
-        playlist_url = db.users.find({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url = playlist_url_doc['playlist_url']
     else:
         playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
         if 'session_name' in session:
@@ -110,7 +113,8 @@ def video(video):
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
-        playlist_url = db.users.find({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
+        playlist_url = playlist_url_doc['playlist_url']
     else:
         playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
         if 'session_name' in session:
