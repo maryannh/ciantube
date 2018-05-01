@@ -152,24 +152,14 @@ def config():
         flash('The {} playlist has been added'.format(
         playlist_name))
         response = redirect(url_for('index'))
-<<<<<<< HEAD
         user = playlist_id + "_" + token_hex(16)
         db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
         keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
         response.set_cookie('ct_cookie', user)
-=======
-        if form.remember_me.data == True:
-            user = playlist_id + "_" + get_random_string()
-            db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
-            keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
-            response.set_cookie('ct_cookie', user)
-        else:
-            if 'session_name' in session:
-                user = session['session_name']
-            else:
-                session['session_name'] = get_random_string()
-                user = session['session_name']
->>>>>>> e91639ec4dbe9fb05b8a883b65d609957a7f4ea0
+        user = playlist_id + "_" + get_random_string()
+        db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
+        keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
+        response.set_cookie('ct_cookie', user)
         return response
     # keen.add_event("view", { "_id": user, "page": "config", "referrer": url,})
     return render_template('config.html', title='Sign In', form=form)
