@@ -150,17 +150,10 @@ def config():
         flash('The {} playlist has been added'.format(
         playlist_name))
         response = redirect(url_for('index'))
-        if form.remember_me.data == True:
-            user = playlist_id + "_" + token_hex(16)
-            db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
-            keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
-            response.set_cookie('ct_cookie', user)
-        else:
-            if 'session_name' in session:
-                user = session['session_name']
-            else:
-                session['session_name'] = token_hex(16)
-                user = session['session_name']
+        user = playlist_id + "_" + token_hex(16)
+        db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
+        keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
+        response.set_cookie('ct_cookie', user)
         return response
     # keen.add_event("view", { "_id": user, "page": "config", "referrer": url,})
     return render_template('config.html', title='Sign In', form=form)

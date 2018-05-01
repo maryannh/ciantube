@@ -19,16 +19,15 @@
   <h3>
     Enter your YouTube playlist address here
   </h3>
-<p class="small">If you already have a playlist but want to swap, you can just enter a new one here. </p>
+    <p>Visit your playlist on <a href="http://www.youtube.com">YouTube.com</a> (not the app) and copy the address from the address bar in your browser, then paste it in the box here.</p>
+<p>If you already have a playlist but want to swap, you can just enter a new one here. </p>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.playlist.label }}<br>
             {{ form.playlist(size=32) }}<br>
              {% for error in form.playlist.errors %}
             <span style="color: red;">[{{ error }}]</span>{% endfor %}
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         
         <p>{{ form.submit() }}</p>
     </form>
