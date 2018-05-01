@@ -9,7 +9,7 @@ import json
 from config import Config
 # from secrets import token_hex
 import random
-from models import get_random_string
+from models import get_random_string, get_playlist_videos
 from http import cookies
 import os
 import requests
@@ -39,8 +39,6 @@ def page_not_found(e):
 @app.route('/index')
 def index():
     playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
-    part = 'contentDetails'
-    max_result = "50"
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
@@ -52,21 +50,13 @@ def index():
         else:
             session['session_name'] = get_random_string()
             user = session['session_name']
-    url_parts = furl(playlist_url)
-    playlist_id = url_parts.args['list']
-    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
-    r = requests.get(api_url)
-    data = r.json()
-    videos = list(data['items'])
-    shuffle(videos)
-    url = request.headers.get("Referer")
-    keen.add_event("view", { "_id": user, "page": "home", "referrer": url, })
-    return render_template('home.html', videos=videos, user=user, playlist_url=playlist_url, url_parts=url_parts, playlist_id=playlist_id)
+    videos = get_playlist_videos(playlist_url, "50")
+    referring_url = request.headers.get("Referer")
+    keen.add_event("view", { "_id": user, "page": "home", "referrer": referring_url, })
+    return render_template('home.html', videos=videos, user=user, playlist_url=playlist_url)
   
 @app.route('/new')
 def new():
-    part = 'contentDetails'
-    max_result = "12"
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
@@ -79,14 +69,8 @@ def new():
         else:
             session['session_name'] = get_random_string()
             user = session['session_name']
-    url_parts = furl(playlist_url) 
-    playlist_id = url_parts.args['list']
-    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
-    url = request.headers.get("Referer")
-    r = requests.get(api_url)
-    data = r.json()
     keen.add_event("view", { "_id": user, "page": "new", "referrer": url, })
-    new_videolist = list(data['items']) 
+    videos = get_playlist_videos(playlist_url, "12")
     return render_template('new.html', new_videolist=new_videolist)
   
 @app.route('/recent')
@@ -110,8 +94,6 @@ def recent():
   
 @app.route('/dev/videos/<video>', methods=['GET'])
 def video(video):
-    part = 'contentDetails'
-    max_result = "50"
     user = request.cookies.get('ct_cookie')
     if user:
         # query database for playlist_url for user
@@ -124,16 +106,10 @@ def video(video):
         else:
             session['session_name'] = get_random_string()
             user = session['session_name']
-    url_parts = furl(playlist_url) 
-    playlist_id = url_parts.args['list']
-    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
-    r = requests.get(api_url)
-    data = r.json()
-    videos = list(data['items'])
-    shuffle(videos)
-    url = request.headers.get("Referer")
-    keen.add_event("view", { "_id": user, "page": "video", "referrer": url,})
-    keen.add_event("video_view", { "_id": user, "page": video, "referrer": url,  })
+    videos = get_playlist_videos(playlist_url, "12")
+    referring_url = request.headers.get("Referer")
+    keen.add_event("view", { "_id": user, "page": "video", "referrer": referring_url,})
+    keen.add_event("video_view", { "_id": user, "page": video, "referrer": referring_url,  })
     return render_template('video.html', video=video, videos=videos)
   
 @app.route('/config', methods=['GET', 'POST'])

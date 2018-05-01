@@ -1,6 +1,9 @@
 import random
 import hashlib
 import time
+import requests
+from random import shuffle
+from furl import furl
 
 SECRET_KEY = 's9S7vrcky2Z96Ak0QBUSynFtXj00mQkDwKM6oguktXS4bveJBG'
 
@@ -38,3 +41,18 @@ def get_random_string(length=16,
                     SECRET_KEY)).encode('utf-8')
             ).digest())
     return ''.join(random.choice(allowed_chars) for i in range(length))
+
+def get_playlist_videos(playlist_url, max_result):
+    """
+    Returns a shuffled list of videos from a playlist
+    """
+    part = 'contentDetails'
+    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
+    url_parts = furl(playlist_url)
+    playlist_id = url_parts.args['list']
+    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    r = requests.get(api_url)
+    data = r.json()
+    videos = list(data['items'])
+    shuffle(videos)
+    return videos
