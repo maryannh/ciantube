@@ -54,16 +54,14 @@ def get_playlist_api_url(playlist_url, max_result):
     playlist_api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
     return playlist_api_url
 
-def get_video_api_url(playlist_url, max_result):
+def get_video_description_api_url(video_id):
     """
     Returns a URL to be used to access a YouTube Data API Video 
     """
-    part = 'contentDetails'
+    part = 'snippet'
     api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    url_parts = furl(playlist_url)
-    playlist_id = url_parts.args['list']
-    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
-    return playlist_api_url
+    video_description_api_url = "https://www.googleapis.com/youtube/v3/videos?part=" + part + "&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + api_key
+    return video_description_api_url
 
 def get_playlist_videos(playlist_url, max_result):
     """
@@ -91,8 +89,16 @@ def get_playlist_videos_by_user(playlist_url, max_result, user):
         videos.append(video_info)
     return videos
 
-def get_first_sentence_of_description(video_id):
+def get_description_noun_phrases(video_id):
     """
-    Returns the first sentence of a YouTube video description
+    Returns the noun phrases from the first sentence of a YouTube video description
     """
-    return description
+    video_description_api_url = get_video_description_api_url(video_id)
+    r = requests.get(video_description_api_url)
+    data = r.json()
+    description = data['items'][0]['snippet']['description']
+    blob = TextBlob(description)
+    sentence = blob.sentences[0]
+    tags = sentence.noun_phrases
+    return tags
+    
