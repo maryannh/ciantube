@@ -4,6 +4,7 @@ import time
 import requests
 from random import shuffle
 from furl import furl
+from textblob import TextBlob
 
 SECRET_KEY = 's9S7vrcky2Z96Ak0QBUSynFtXj00mQkDwKM6oguktXS4bveJBG'
 
@@ -42,7 +43,7 @@ def get_random_string(length=16,
             ).digest())
     return ''.join(random.choice(allowed_chars) for i in range(length))
 
-def get_api_url(playlist_url, max_result):
+def get_playlist_api_url(playlist_url, max_result):
     """
     Returns a URL to be used to access YouTube Data API PlaylistItems 
     """
@@ -50,15 +51,26 @@ def get_api_url(playlist_url, max_result):
     api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
     url_parts = furl(playlist_url)
     playlist_id = url_parts.args['list']
+    playlist_api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    return playlist_api_url
+
+def get_video_api_url(playlist_url, max_result):
+    """
+    Returns a URL to be used to access a YouTube Data API Video 
+    """
+    part = 'contentDetails'
+    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
+    url_parts = furl(playlist_url)
+    playlist_id = url_parts.args['list']
     api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
-    return api_url
+    return playlist_api_url
 
 def get_playlist_videos(playlist_url, max_result):
     """
     Returns a shuffled list of videos from a playlist
     """
-    api_url = get_api_url(playlist_url, max_result)
-    r = requests.get(api_url)
+    playlist_api_url = get_playlist_api_url(playlist_url, max_result)
+    r = requests.get(playlist_api_url)
     data = r.json()
     videos = list(data['items'])
     shuffle(videos)
@@ -68,8 +80,8 @@ def get_playlist_videos_by_user(playlist_url, max_result, user):
     """
     Returns a list of videos from a playlist along with the user ID from the database
     """
-    api_url = get_api_url(playlist_url, max_result)
-    r = requests.get(api_url)
+    playlist_api_url = get_playlist_api_url(playlist_url, max_result)
+    r = requests.get(playlist_api_url)
     data = r.json()
     videos_from_api = list(data['items'])
     videos = []
@@ -78,3 +90,9 @@ def get_playlist_videos_by_user(playlist_url, max_result, user):
         video_info = {"video_id": video_id, "user": user}
         videos.append(video_info)
     return videos
+
+def get_first_sentence_of_description(video_id):
+    """
+    Returns the first sentence of a YouTube video description
+    """
+    return description

@@ -39,13 +39,20 @@ nav {
   margin-bottom: 2em;
 }
 
-nav h1 {
-    width: 100%;
+nav.navbar .container-fluid {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
 }
 
-nav h1 .config {
- margin-left: 0.5em;
-    padding-left: 0.5em;
+a.logo {
+    font-family: var(--header-font);
+    color: var(--dark);
+    font-size: 2.5em;
+}
+
+img.icon {
+    max-height: 50px;
+    width: auto;
 }
 
 /* .grid {

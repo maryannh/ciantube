@@ -37,18 +37,36 @@ window.cookieconsent.initialise({
   </head>
   {% block bodyclass %}{% endblock %}
   
-  <nav class="navbar">
-    <div class="container">
-       <h1 class="justify-content-between">
-        <span onclick="goBack()"><i class="fas fa-caret-square-left"></i></span>
-         <a href={{ url_for('index') }}>CianTube</a> 
-           <a href={{ url_for('new') }}><i class="fas fa-inbox"></i></a>  
-           <a href={{ url_for('recent') }}><i class="fas fa-clock"></i></a> 
-            <a href={{ url_for('config') }} class="config text-right"><i class="fas fa-cogs"></i></a>
-         
+  
+    <nav class="navbar">
+        <div class="container-fluid">
+        <div class="row">
+    <div class="col">
+   <a href={{ url_for('index') }} class="logo">CianTube</a>
+    </div>
+    <div class="col">
+ <span onclick="goBack()"><img src="../static/images/back.png" alt="Back" class="icon">
+    </div>
+    <div class="col">
+  <a href={{ url_for('new') }}><img src="../static/images/new.png" alt="New Videos" class="icon">
+    </div>
+   <div class="col">
+    <a href={{ url_for('recent') }}><img src="../static/images/recent.png" alt="Recently viewed videos" class="icon">
+    </div>
+    <div class="col">
+    <a href={{ url_for('config') }}><img src="../static/images/config.png" alt="Add your videos" class="icon">
+        </a>
+    </div>
+
+
+        
           
          
-      </h1>
+
+        
+            
+           
+            </div> 
     </div>
   </nav>
   
