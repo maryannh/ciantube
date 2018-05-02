@@ -13,7 +13,6 @@ from models import get_random_string, get_playlist_videos
 from http import cookies
 import os
 import requests
-from furl import furl
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
@@ -69,9 +68,10 @@ def new():
         else:
             session['session_name'] = get_random_string()
             user = session['session_name']
-    keen.add_event("view", { "_id": user, "page": "new", "referrer": url, })
     videos = get_playlist_videos(playlist_url, "12")
-    return render_template('new.html', new_videolist=new_videolist)
+    referring_url = request.headers.get("Referer")
+    keen.add_event("view", { "_id": user, "page": "new", "referrer": referring_url, })
+    return render_template('new.html', videos=videos)
   
 @app.route('/recent')
 def recent():

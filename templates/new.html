@@ -17,7 +17,7 @@
     
 <div class="grid videos new">
  
- {% for video in new_videolist|sort(attribute='contentDetails.videoPublishedAt') %}
+ {% for video in videos %}
   <div class="item thumb">
        
    	<a href="dev/videos/{{ video.contentDetails.videoId }}">

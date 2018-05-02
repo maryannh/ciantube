@@ -42,17 +42,39 @@ def get_random_string(length=16,
             ).digest())
     return ''.join(random.choice(allowed_chars) for i in range(length))
 
-def get_playlist_videos(playlist_url, max_result):
+def get_api_url(playlist_url, max_result):
     """
-    Returns a shuffled list of videos from a playlist
+    Returns a URL to be used to access YouTube Data API PlaylistItems 
     """
     part = 'contentDetails'
     api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
     url_parts = furl(playlist_url)
     playlist_id = url_parts.args['list']
     api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    return api_url
+
+def get_playlist_videos(playlist_url, max_result):
+    """
+    Returns a shuffled list of videos from a playlist
+    """
+    api_url = get_api_url(playlist_url, max_result)
     r = requests.get(api_url)
     data = r.json()
     videos = list(data['items'])
     shuffle(videos)
+    return videos
+
+def get_playlist_videos_by_user(playlist_url, max_result, user):
+    """
+    Returns a list of videos from a playlist along with the user ID from the database
+    """
+    api_url = get_api_url(playlist_url, max_result)
+    r = requests.get(api_url)
+    data = r.json()
+    videos_from_api = list(data['items'])
+    videos = []
+    for video in videos_from_api:
+        video_id = video['contentDetails']['videoId']
+        video_info = {"video_id": video_id, "user": user}
+        videos.append(video_info)
     return videos
