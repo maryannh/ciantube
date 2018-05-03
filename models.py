@@ -4,6 +4,9 @@ import time
 import requests
 from random import shuffle
 from furl import furl
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 from textblob import TextBlob
 
 SECRET_KEY = 's9S7vrcky2Z96Ak0QBUSynFtXj00mQkDwKM6oguktXS4bveJBG'
@@ -100,5 +103,24 @@ def get_description_noun_phrases(video_id):
     blob = TextBlob(description)
     sentence = blob.sentences[0]
     tags = sentence.noun_phrases
+    return tags
+
+def get_description_words(video_id):
+    """
+    Returns the noun phrases from the first sentence of a YouTube video description
+    """
+    video_description_api_url = get_video_description_api_url(video_id)
+    r = requests.get(video_description_api_url)
+    data = r.json()
+    description = data['items'][0]['snippet']['description']
+    blob = TextBlob(description)
+    sentence = blob.sentences[0]
+    stop_words = set(stopwords.words('english'))
+    word_tokens = word_tokenize(sentence)
+    tags = [w for w in word_tokens if not w in stop_words]
+    tags = []
+    for w in word_tokens:
+        if w not in stop_words:
+            tags.append(w)
     return tags
     
