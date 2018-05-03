@@ -6,5 +6,9 @@
         "project_name": "ciantube",
         "runtime": "python3.6",
         "s3_bucket": "zappa-m112fxrt0",
+        "events": [{
+           "function": "classifier.tag_videos", // The function to execute
+           "expression": "rate(1 hour)" // When to execute it (in cron or rate format)
+       }],
     }
 }
