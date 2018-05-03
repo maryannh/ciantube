@@ -40,12 +40,12 @@ def page_not_found(e):
 def index():
     videos = list(db.videos.find({}).sort("video_id", -1))
     keen.add_event("view", {"page": "home"})
-    return render_template('home.html', videos=videos, user=user, playlist_url=playlist_url)
+    return render_template('home.html', videos=videos, playlist_url=playlist_url)
   
 @app.route('/recent')
 def recent():
     keen.add_event("view", { "page": "recent" })  
-    recent_videolist = keen.select_unique("video_view", target_property="page", timeframe="this_7_days", filters=[{ "property_name": "_id", "operator": "ne", "property_value": user }])
+    recent_videolist = keen.select_unique("video_view", target_property="page", timeframe="this_7_days")
     return render_template('recent.html', recent_videolist=recent_videolist)
   
 @app.route('/dev/videos/<video>', methods=['GET'])
@@ -54,13 +54,13 @@ def video(video):
     search_term = tags +  " -" + video
     videos = search(search_term)
     amount_of_related_videos = len(videos)
-    random_videos_to_get = 6 - amount_of_related_videos
+    random_videos_to_get = 8 - amount_of_related_videos
     random_videos = db.videos.find().limit(random_videos_to_get)
     videos.append(random_videos)
     referring_url = request.headers.get("Referer")
-    keen.add_event("view", { "_id": user, "page": "video", "referrer": referring_url,})
-    keen.add_event("video_view", { "_id": user, "page": video, "referrer": referring_url,  })
-    return render_template('video.html', video=video, videos=videos, tags=tags, user=user)
+    keen.add_event("view", {"page": "video"})
+    keen.add_event("video_view", {"page": video })
+    return render_template('video.html', video=video, videos=videos, tags=tags)
 
 @app.route('/tags/<tag>', methods=['GET'])
 def tag(tag):
