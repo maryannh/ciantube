@@ -9,9 +9,11 @@ import json
 from config import Config
 # from secrets import token_hex
 import random
-from models import get_random_string, get_playlist_videos
+from models import get_random_string, get_playlist_videos, get_tags, list_to_string
+from classifier import search
 from http import cookies
 import os
+from furl import furl
 import requests
 from bson.objectid import ObjectId
 
@@ -106,11 +108,12 @@ def video(video):
         else:
             session['session_name'] = get_random_string()
             user = session['session_name']
-    videos = get_playlist_videos(playlist_url, "12")
+    tags = list_to_string(video)
+    videos = search(tags, user)
     referring_url = request.headers.get("Referer")
     keen.add_event("view", { "_id": user, "page": "video", "referrer": referring_url,})
     keen.add_event("video_view", { "_id": user, "page": video, "referrer": referring_url,  })
-    return render_template('video.html', video=video, videos=videos)
+    return render_template('video.html', video=video, videos=videos, tags=tags, user=user)
   
 @app.route('/config', methods=['GET', 'POST'])
 def config():
@@ -128,7 +131,7 @@ def config():
         flash('The {} playlist has been added'.format(
         playlist_name))
         response = redirect(url_for('index'))
-        user = playlist_id + "_" + token_hex(16)
+        user = playlist_id + "_" + get_random_string()
         db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
         keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
         response.set_cookie('ct_cookie', user)

@@ -7,7 +7,7 @@ from furl import furl
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from textblob import TextBlob
+from textblob import TextBlob, Word
 
 SECRET_KEY = 's9S7vrcky2Z96Ak0QBUSynFtXj00mQkDwKM6oguktXS4bveJBG'
 
@@ -57,15 +57,6 @@ def get_playlist_api_url(playlist_url, max_result):
     playlist_api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
     return playlist_api_url
 
-def get_video_description_api_url(video_id):
-    """
-    Returns a URL to be used to access a YouTube Data API Video 
-    """
-    part = 'snippet'
-    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    video_description_api_url = "https://www.googleapis.com/youtube/v3/videos?part=" + part + "&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + api_key
-    return video_description_api_url
-
 def get_playlist_videos(playlist_url, max_result):
     """
     Returns a shuffled list of videos from a playlist
@@ -92,35 +83,60 @@ def get_playlist_videos_by_user(playlist_url, max_result, user):
         videos.append(video_info)
     return videos
 
-def get_description_noun_phrases(video_id):
+def get_description(video_id):
+    """
+    Returns the first sentence from the description of a video 
+    """
+    part = 'snippet'
+    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
+    api_url = "https://www.googleapis.com/youtube/v3/videos?part=" + part + "&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + api_key
+    r = requests.get(api_url)
+    data = r.json()
+    full_description = data['items'][0]['snippet']['description']
+    blob = TextBlob(full_description)
+    description = str(blob.sentences[0])
+    return description
+
+def get_tags(video_id):
     """
     Returns the noun phrases from the first sentence of a YouTube video description
     """
-    video_description_api_url = get_video_description_api_url(video_id)
-    r = requests.get(video_description_api_url)
-    data = r.json()
-    description = data['items'][0]['snippet']['description']
+    description = get_description(video_id)
     blob = TextBlob(description)
     sentence = blob.sentences[0]
-    tags = sentence.noun_phrases
+    tags = []
+    for word,pos in sentence.tags:
+        if pos == 'NN':
+            tags.append(word)
     return tags
 
-def get_description_words(video_id):
-    """
-    Returns the noun phrases from the first sentence of a YouTube video description
-    """
-    video_description_api_url = get_video_description_api_url(video_id)
-    r = requests.get(video_description_api_url)
-    data = r.json()
-    description = data['items'][0]['snippet']['description']
-    blob = TextBlob(description)
-    sentence = blob.sentences[0]
-    stop_words = set(stopwords.words('english'))
-    word_tokens = word_tokenize(sentence)
-    tags = [w for w in word_tokens if not w in stop_words]
-    tags = []
-    for w in word_tokens:
-        if w not in stop_words:
-            tags.append(w)
-    return tags
     
+def get_youtube_tags(video_id):
+    """
+    Get the tags from the YouTube API
+    """
+    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
+    api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftags&key=" + api_key
+    r = requests.get(api_url)
+    data = r.json()
+    youtube_tags = data['items'][0]['snippet']['tags']
+    return youtube_tags
+    
+def get_title(video_id):
+    """
+    Get the title from the YouTube API
+    """
+    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
+    api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftitle&key=" + api_key
+    r = requests.get(api_url)
+    data = r.json()
+    title = data['items'][0]['snippet']['title']
+    return title
+    
+def list_to_string(video):
+    tags = get_tags(video)
+    tag_string = ' '.join(tags)
+    return tag_string
+
+# tags = list_to_string("QA2yjW1XUvA")
+# print(tags)

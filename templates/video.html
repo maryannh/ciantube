@@ -21,14 +21,16 @@
 				</div>
   </div>
   <div class="videos random">
+      
+      {{ user }}
   
  {% for video in videos %}
 
        <div class="thumb">
 		
 		
-   	<a href="{{ video.contentDetails.videoId }}">
-			<img src="http://img.youtube.com/vi/{{ video.contentDetails.videoId }}/mqdefault.jpg" class="rounded">
+   	<a href="{{ zzz }}">
+			<img src="http://img.youtube.com/vi/{{ xxx }}/mqdefault.jpg" class="rounded">
        </a>
 	</div>
      {% endfor %}
