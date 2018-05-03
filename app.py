@@ -30,7 +30,6 @@ keen.read_key = "A8B4DC61230BAFC32A7627130B3F702A58FCFD2A96DF525A468ED37E53A857B
 playlist_id = "PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
 playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
 api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-user = "not_logged_in"
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -39,110 +38,29 @@ def page_not_found(e):
 @app.route('/')
 @app.route('/index')
 def index():
-    playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
-    user = request.cookies.get('ct_cookie')
-    if user:
-        # query database for playlist_url for user
-        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
-        playlist_url = playlist_url_doc['playlist_url']
-    else:
-        if 'session_name' in session:
-            user = session['session_name']
-        else:
-            session['session_name'] = get_random_string()
-            user = session['session_name']
-    videos = get_playlist_videos(playlist_url, "50")
-    referring_url = request.headers.get("Referer")
-    keen.add_event("view", { "_id": user, "page": "home", "referrer": referring_url, })
+    videos = list(db.videos.find({}).sort("video_id", -1))
+    keen.add_event("view", {"page": "home"})
     return render_template('home.html', videos=videos, user=user, playlist_url=playlist_url)
-  
-@app.route('/new')
-def new():
-    user = request.cookies.get('ct_cookie')
-    if user:
-        # query database for playlist_url for user
-        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
-        playlist_url = playlist_url_doc['playlist_url']
-    else:
-        playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
-        if 'session_name' in session:
-            user = session['session_name']
-        else:
-            session['session_name'] = get_random_string()
-            user = session['session_name']
-    videos = get_playlist_videos(playlist_url, "12")
-    referring_url = request.headers.get("Referer")
-    keen.add_event("view", { "_id": user, "page": "new", "referrer": referring_url, })
-    return render_template('new.html', videos=videos)
   
 @app.route('/recent')
 def recent():
-    url = request.headers.get("Referer")
-    user = request.cookies.get('ct_cookie')
-    if user:
-        # query database for playlist_url for user
-        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
-        playlist_url = playlist_url_doc['playlist_url']
-    else:
-        playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
-        if 'session_name' in session:
-            user = session['session_name']
-        else:
-            session['session_name'] = get_random_string()
-            user = session['session_name']
-    keen.add_event("view", { "_id": user, "page": "recent", "referrer": url, })  
+    keen.add_event("view", { "page": "recent" })  
     recent_videolist = keen.select_unique("video_view", target_property="page", timeframe="this_7_days", filters=[{ "property_name": "_id", "operator": "ne", "property_value": user }])
     return render_template('recent.html', recent_videolist=recent_videolist)
   
 @app.route('/dev/videos/<video>', methods=['GET'])
 def video(video):
-    user = request.cookies.get('ct_cookie')
-    if user:
-        # query database for playlist_url for user
-        playlist_url_doc = db.users.find_one({"user": user}, {"playlist_url": 1, "_id": 0})
-        playlist_url = playlist_url_doc['playlist_url']
-    else:
-        playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
-        if 'session_name' in session:
-            user = session['session_name']
-        else:
-            session['session_name'] = get_random_string()
-            user = session['session_name']
     tags = list_to_string(video)
-    videos = search(tags, user)
+    search_term = tags +  " -" + video
+    videos = search(search_term)
+    amount_of_related_videos = len(videos)
+    random_videos_to_get = 6 - amount_of_related_videos
+    random_videos = db.videos.find().limit(random_videos_to_get)
+    videos.append(random_videos)
     referring_url = request.headers.get("Referer")
     keen.add_event("view", { "_id": user, "page": "video", "referrer": referring_url,})
     keen.add_event("video_view", { "_id": user, "page": video, "referrer": referring_url,  })
     return render_template('video.html', video=video, videos=videos, tags=tags, user=user)
-  
-@app.route('/config', methods=['GET', 'POST'])
-def config():
-    form = LoginForm()
-    if form.validate_on_submit():
-        playlist_url = form.playlist.data
-        url_parts = furl(playlist_url) 
-        playlist_id = url_parts.args['list']
-        playlist_details_url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&id=" + playlist_id + "&maxResults=1&fields=items%2Fsnippet%2Ftitle&key=" + api_key
-        r = requests.get(playlist_details_url)
-        data = r.json()
-        playlist_info = list(data['items'])
-        for info in playlist_info:
-            playlist_name = info['snippet']['title']
-        flash('The {} playlist has been added'.format(
-        playlist_name))
-        response = redirect(url_for('index'))
-        user = playlist_id + "_" + get_random_string()
-        db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
-        keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
-        response.set_cookie('ct_cookie', user)
-        user = playlist_id + "_" + get_random_string()
-        db.users.insert( { "playlist_url": playlist_url, "playlist_id": playlist_id, "user": user } )
-        keen.add_event("add_playlist", { "_id": user, "playlist_id": playlist_id,})
-        response.set_cookie('ct_cookie', user)
-        return response
-    # keen.add_event("view", { "_id": user, "page": "config", "referrer": url,})
-    return render_template('config.html', title='Sign In', form=form)
-
 
 @app.route('/tags/<tag>', methods=['GET'])
 def tag(tag):

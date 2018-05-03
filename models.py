@@ -57,29 +57,20 @@ def get_playlist_api_url(playlist_url, max_result):
     playlist_api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
     return playlist_api_url
 
-def get_playlist_videos(playlist_url, max_result):
-    """
-    Returns a shuffled list of videos from a playlist
-    """
-    playlist_api_url = get_playlist_api_url(playlist_url, max_result)
-    r = requests.get(playlist_api_url)
-    data = r.json()
-    videos = list(data['items'])
-    shuffle(videos)
-    return videos
 
-def get_playlist_videos_by_user(playlist_url, max_result, user):
+def get_playlist_videos(playlist_id, max_result):
     """
     Returns a list of videos from a playlist along with the user ID from the database
     """
-    playlist_api_url = get_playlist_api_url(playlist_url, max_result)
-    r = requests.get(playlist_api_url)
+    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
+    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2contentDetails&maxResults=50&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    r = requests.get(api_url)
     data = r.json()
     videos_from_api = list(data['items'])
     videos = []
     for video in videos_from_api:
         video_id = video['contentDetails']['videoId']
-        video_info = {"video_id": video_id, "user": user}
+        video_info = {"video_id": video_id}
         videos.append(video_info)
     return videos
 
