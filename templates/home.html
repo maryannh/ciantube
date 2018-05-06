@@ -18,7 +18,7 @@
 {% for video in videos[:12] %}
   <div class="item thumb">
        
-   	<a href="dev/videos/{{ video.video_id }}">
+   	<a href={{ url_for('video', video=video.video_id) }}>
 			<img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg" class="rounded mx-auto" height=180 width=320>
        </a>
      </div>

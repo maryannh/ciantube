@@ -7,23 +7,17 @@
 <!-- head stuff here: css etc, super() renders the stuff in the parent template -->
 {% endblock %}
 {% block bodyclass %}
-<body class="recent">
+<body class="new">
 {% endblock %}
 {% block content %}
 <!-- content stuff here -->
 	 <h2>
-		Recently Watched
+		About CianTube
 	</h2>
-<div class="grid videos">
+    
+<div class="text about">
+    
  
- {% for video in recent_videolist[:12] %}
- 		<div class="item thumb">
-       
-   	<a href="dev/videos/{{ video }}">
-			<img src="http://img.youtube.com/vi/{{ video }}/mqdefault.jpg" class="rounded mx-auto">
-       </a>
-     </div>
-     {% endfor %}
  
   </div>
 	

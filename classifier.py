@@ -13,14 +13,17 @@ def tag_videos():
     playlists = list(db.seed_playlist.find({}, {"playlist_id": 1, "_id": 0}))
     for playlist in playlists:
         playlist_id = playlist['playlist_id']
-        video_list = list(get_playlist_videos(playlist_id, "50"))
+        video_list = list(get_playlist_videos(playlist_id))
         for video in video_list:
             video_id = video['video_id']
-            tags = get_tags(video_id)
             description = get_description(video_id)
             title = get_title(video_id)
             youtube_tags = get_youtube_tags(video_id)
-            db.videos.update( { "video_id": video_id }, {"$set": { "video_id": video_id, "tags": tags, "description": description, "youtube_tags": youtube_tags, "title": title }}, upsert = True )
+            db.videos.update( { "video_id": video_id }, 
+                             {"$set": { "video_id": video_id, "description": description, "youtube_tags": youtube_tags, "title": title },
+                              "$currentDate": { "lastModified": True, "updated": { "$type": "timestamp" }                       
+            }}, upsert = True )
+            print(video, "added")
             
 def search(search_term):
     client = MongoClient('mongodb://maryann:ferrari1357@ds159845.mlab.com:59845/tube')

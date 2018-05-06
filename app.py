@@ -42,13 +42,25 @@ def index():
     keen.add_event("view", {"page": "home"})
     return render_template('home.html', videos=videos, playlist_url=playlist_url)
   
-@app.route('/recent')
-def recent():
-    keen.add_event("view", { "page": "recent" })  
-    recent_videolist = keen.select_unique("video_view", target_property="page", timeframe="this_7_days")
-    return render_template('recent.html', recent_videolist=recent_videolist)
+@app.route('/new')
+def new():
+    keen.add_event("view", { "page": "new" })  
+    new_videolist = list(db.videos.find({}).sort("updated.$ts", -1).limit(12))
+    return render_template('new.html', new_videolist=new_videolist)
+
+@app.route('/popular')
+def popular():
+    choose_method = ["popular", "trending"]
+    method = random.choice(choose_method)
+    if method == "popular":
+        timeframe = "this_1_years"
+    if method == "trending":
+        timeframe = "this_7_days"
+    keen.add_event("view", { "page": method })  
+    popular_videolist = keen.count("video_view", timeframe=timeframe, group_by="page")
+    return render_template('popular.html', popular_videolist=popular_videolist)
   
-@app.route('/dev/videos/<video>', methods=['GET'])
+@app.route('/videos/<video>', methods=['GET'])
 def video(video):
     tags = list_to_string(video)
     search_term = tags +  " -" + video
@@ -61,6 +73,14 @@ def video(video):
     keen.add_event("view", {"page": "video"})
     keen.add_event("video_view", {"page": video })
     return render_template('video.html', video=video, videos=videos, tags=tags)
+
+app.route('/privacy')
+def privacy():
+    return render_template(privacy.html)
+
+app.route('/about')
+def about():
+    return render_template(about.html)
 
 @app.route('/tags/<tag>', methods=['GET'])
 def tag(tag):

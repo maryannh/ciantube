@@ -12,16 +12,16 @@
 {% block content %}
 <!-- content stuff here -->
 	 <h2>
-		New Videos
+		Popular Videos
 	</h2>
     
 <div class="grid videos new">
  
- {% for video in new_videolist %}
+ {% for video in popular_videolist[:12] %}
   <div class="item thumb">
        
    	<a href="dev/videos/{{ video.video_id }}">
-			<img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg" class="rounded mx-auto">
+			<img src="http://img.youtube.com/vi/{{ video.page }}/mqdefault.jpg" class="rounded mx-auto">
        </a>
      </div>
      {% endfor %}
