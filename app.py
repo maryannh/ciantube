@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, redirect, request, url_for, mak
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import random
-from forms import LoginForm
+from forms import SuggestForm, AddForm
 from random import shuffle
 import keen
 import json
@@ -45,7 +45,7 @@ def index():
 @app.route('/new')
 def new():
     keen.add_event("view", { "page": "new" })  
-    new_videolist = list(db.videos.find({}).sort("updated.$ts", -1).limit(12))
+    new_videolist = list(db.videos.find({}).sort("updated.$date", -1).limit(12))
     return render_template('new.html', new_videolist=new_videolist)
 
 @app.route('/popular')
@@ -74,13 +74,35 @@ def video(video):
     keen.add_event("video_view", {"page": video })
     return render_template('video.html', video=video, videos=videos, tags=tags)
 
-app.route('/privacy')
+@app.route('/privacy')
 def privacy():
-    return render_template(privacy.html)
+    return render_template('privacy.html')
 
-app.route('/about')
+@app.route('/about')
 def about():
-    return render_template(about.html)
+    return render_template('about.html')
+
+@app.route('/suggest', methods=['GET', 'POST'])
+def suggest():
+    form = SuggestForm()
+    keen.add_event("view", {"page": "suggest"})
+    if form.validate_on_submit():
+        suggestion = form.suggestion.data
+        # add mongodb update stuff here
+        db.suggestions.insert({"suggestion": suggestion})
+        flash('Thanks for your suggestion!')
+        return redirect('/index')
+    return render_template('suggest.html', form=form)
+
+@app.route('/add_bt7j0srn69', methods=['GET', 'POST'])
+def add_bt7j0srn69():
+    form = AddForm()
+    if form.validate_on_submit():
+        playlist_id = form.playlist.data
+        db.seed_playlist.insert({"playlist_id": playlist_id})
+        flash('Playlist added')
+        return redirect('/add')
+    return render_template('add.html', form=form)
 
 @app.route('/tags/<tag>', methods=['GET'])
 def tag(tag):

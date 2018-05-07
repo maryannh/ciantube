@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}
+{{ channel }}
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="suggest">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+	 <h2>
+		Suggest more videos
+	</h2>
+    
+<div class="suggest form">
+ 
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.suggestion.label }}<br>
+            {{ form.suggestion(size=32) }}<br>
+             {% for error in form.suggestion.errors %}
+            <span style="color: red;">[{{ error }}]</span>{% endfor %}
+        </p>
+     
+        <p>{{ form.submit() }}</p>
+    </form>
+ 
+  </div>
+	
+
+{% endblock %}

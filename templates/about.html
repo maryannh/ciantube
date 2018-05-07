@@ -7,7 +7,7 @@
 <!-- head stuff here: css etc, super() renders the stuff in the parent template -->
 {% endblock %}
 {% block bodyclass %}
-<body class="new">
+<body class="about">
 {% endblock %}
 {% block content %}
 <!-- content stuff here -->
@@ -17,7 +17,28 @@
     
 <div class="text about">
     
- 
+ <p>CianTube has been made by me, Mary-Ann Horley, as a final project for an MA in Digital Media at the University of Lincoln. It is not associated with YouTube or Google. It is named after my five-year-old son Cian.</p>
+    
+<h3>Principles</h3>
+    <ul>
+<li>Safe viewing</li>
+<li>Minimal data collection</li>
+<li>Inspiration not “engagement” AKA addiction</li>
+        </ul>
+    
+<h3>Credits</h3>
+<p>This site relies on:</p>
+    <ul>
+<li>The <a>Python</a> language, specifically <a href="http://flask.pocoo.org/docs/0.12/">Flask 0.12</a> for the basic structure, hosted on <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> with the help of <a href="https://github.com/Miserlou/Zappa">Zappa</a></li>
+<li>Python modules <a href="https://api.mongodb.com/python/current/">PyMongo</a>, <a href="https://github.com/gruns/furl">Furl</a>, <a href="http://www.python-requests.org/en/master/">Requests</a>, <a href="https://www.nltk.org/">NLTK</a>, <a href="http://textblob.readthedocs.io/en/dev/">TextBlob</a>, <a href="http://wtforms.readthedocs.io/en/stable/">WTF</a></li>
+<li><a href="https://getbootstrap.com/">Bootstrap 4</a> for basic interface elements</li>
+<li><a href="https://fontawesome.com">FontAwesome</a> for icons</li>
+<li>The font Fredoka One via <a href="https://fonts.google.com/">Google Fonts</a></li>
+<li><a href="https://www.mongodb.com/">MongoDB</a> 3.4 on <a href="https://mlab.com/databases/tube/collections/content">MLab</a> to store data</li>
+<li>The <a href="https://developers.google.com/youtube/v3/">YouTube Data API v3</a> to gather videos</li>
+<li><a href="https://keen.io/docs/api/#timeframe">Keen.io</a> and its Python module to collect anonymous usage data</li>
+<li>The endless patience of Laury, Cian and Penny!</li>
+</ul>
  
   </div>
 	

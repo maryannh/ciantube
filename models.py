@@ -85,14 +85,15 @@ def get_playlist_videos(playlist_id):
 
 def get_description(video_id):
     """
-    Returns the first sentence from the description of a video 
+    Returns the description of a video 
     """
-    part = 'snippet'
     api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    api_url = "https://www.googleapis.com/youtube/v3/videos?part=" + part + "&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + api_key
+    api_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + api_key
     r = requests.get(api_url)
     data = r.json()
-    description = data['items'][0]['snippet']['description']
+    description = None
+    for video in list(data['items']):
+        description = video['snippet']['description']
     return description
 
 def get_tags(video_id):
@@ -117,7 +118,9 @@ def get_youtube_tags(video_id):
     api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftags&key=" + api_key
     r = requests.get(api_url)
     data = r.json()
-    youtube_tags = data['items'][0]['snippet']['tags']
+    youtube_tags = None
+    for video in list(data['items']):
+        youtube_tags = video['snippet']['tags']
     return youtube_tags
     
 def get_title(video_id):
@@ -128,7 +131,9 @@ def get_title(video_id):
     api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftitle&key=" + api_key
     r = requests.get(api_url)
     data = r.json()
-    title = data['items'][0]['snippet']['title']
+    title = None
+    for video in list(data['items']):
+        title = video['snippet']['title']
     return title
     
 def list_to_string(video):

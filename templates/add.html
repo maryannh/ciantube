@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}
+{{ channel }}
+{% endblock %}
+{% block head %}
+  {{ super() }}
+<!-- head stuff here: css etc, super() renders the stuff in the parent template -->
+{% endblock %}
+{% block bodyclass %}
+<body class="content">
+{% endblock %}
+{% block content %}
+<!-- content stuff here -->
+	 <h2>
+		Add a playlist
+	</h2>
+    
+<div class="content form">
+ 
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.playlist.label }}<br>
+            {{ form.playlist(size=32) }}<br>
+             {% for error in form.playlist.errors %}
+            <span style="color: red;">[{{ error }}]</span>{% endfor %}
+        </p>
+        
+     
+        <p>{{ form.submit() }}</p>
+    </form>
+ 
+  </div>
+	
+
+{% endblock %}
