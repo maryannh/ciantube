@@ -86,23 +86,33 @@ div.single-video {
     margin-bottom: 2em;
 }
 
-}
 
-p a {
-  color: var(--text);
-  text-decoration: underline;
-  text-decoration-color: var(--highlight);
+a:link, a:active, a:hover {
+  
+    color: var(--highlight);
   font-weight: bold;
 }
 
-p a:hover {
-  color: var(--highlight);
+a:visited {
+  color: var(--text);
+}
+
+span.info-links {
+    margin-left: 1em;
 }
 
 h2 {
   color: var(--logo);
   font-size: 3em;
   font-family: var(--header-font);
+}
+
+li.nav-item .active {
+    display: none;
+}
+
+.nav-tabs {
+    border-bottom: none;
 }
 
 h1, h1 a {
@@ -116,6 +126,10 @@ h1, h1 a {
 h1 a:hover {
   text-decoration: none;
   color: var(--highlight);
+}
+
+.navbar h1.a, .navbar h1.span {
+    margin-right: 2em;
 }
 
 .rounded {

@@ -16,19 +16,7 @@
                 
 <!-- start tabs -->
 
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    
-  <li class="nav-item">
-    <a class="nav-link active" id="{{ video }}-tab" data-toggle="tab" href="#{{ video }}" role="tab" aria-controls="home" aria-selected="true"><img src="http://img.youtube.com/vi/{{ video }}/mqdefault.jpg" class="rounded"></a>
-  </li>
-    <!-- start loop -->
-    {% for video in videos[:5] %}
-  <li class="nav-item">
-    <a class="nav-link" id="{{ video.video_id }}-tab" data-toggle="tab" href="#{{ video.video_id }}" role="tab" aria-controls="profile" aria-selected="false"><img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg" class="rounded"></a>
-  </li>
-  {% endfor %}
-    <!-- end loop -->
-</ul>
+
      
                 
 <div class="tab-content" id="myTabContent">
@@ -54,6 +42,20 @@
     {% endfor %}
     <!-- end loop -->
 </div>
+                
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    
+  <li class="nav-item">
+    <a class="nav-link active" id="{{ video }}-tab" data-toggle="tab" href="#{{ video }}" role="tab" aria-controls="home" aria-selected="true"><img src="http://img.youtube.com/vi/{{ video }}/mqdefault.jpg" class="rounded"></a>
+  </li>
+    <!-- start loop -->
+    {% for video in videos[:6] %}
+  <li class="nav-item">
+    <a class="nav-link" id="{{ video.video_id }}-tab" data-toggle="tab" href="#{{ video.video_id }}" role="tab" aria-controls="profile" aria-selected="false"><img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg" class="rounded"></a>
+  </li>
+  {% endfor %}
+    <!-- end loop -->
+</ul>
                 
 <!-- end tabs -->
                 

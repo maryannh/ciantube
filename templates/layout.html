@@ -57,6 +57,7 @@ window.cookieconsent.initialise({
          <a href={{ url_for('popular') }}><i class="fas fa-heart"></i></a>
 
            <a href={{ url_for('new') }}>NEW</i></a>
+        <a href={{ url_for('suggest') }}><i class="fas fa-plus-square"></i></a>
           
          
       </h1>
@@ -88,14 +89,30 @@ window.cookieconsent.initialise({
       <div class="container">
         <span class="copy"> {% block footer %}
       &copy; <script>document.write(new Date().getFullYear())</script> Mary-Ann Horley
-      {% endblock %}</span>
+      {% endblock %}</span> <span class="info-links"><a href={{ url_for('about') }}>About this site</a> & <a href={{ url_for('privacy') }}>Privacy information</a></span>
       </div>
     </footer>
     <script>
 function goBack() {
     window.history.back();
 }
+        
+var button = document.querySelector('.more-videos');
+
+button.addEventListener('click', function (event) {
+
+    var next = this.nextElementSibling;
+
+    if (next.style.display == "none") {
+        next.style.display = "block";
+
+    } else {
+        next.style.display = "none";
+    }
+});
 </script>
+
+
 
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -101,7 +101,7 @@ def add_bt7j0srn69():
         playlist_id = form.playlist.data
         db.seed_playlist.insert({"playlist_id": playlist_id})
         flash('Playlist added')
-        return redirect('/add')
+        return redirect('/add_bt7j0srn69')
     return render_template('add.html', form=form)
 
 @app.route('/tags/<tag>', methods=['GET'])
