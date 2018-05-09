@@ -20,7 +20,9 @@ def tag_videos():
             title = get_title(video_id)
             youtube_tags = get_youtube_tags(video_id)
             db.videos.update( { "video_id": video_id }, 
-                             {"$set": { "video_id": video_id, "description": description, "youtube_tags": youtube_tags, "title": title }}, upsert = True )
+                             {"$set": { "video_id": video_id, "description": description, "youtube_tags": youtube_tags, "title": title },
+                              "$currentDate": { "lastModified": True, "updated": { "$type": "timestamp" }                       
+            }}, upsert = True )
             print(video_id, "added")
         db.seed_playlist.update({"playlist_id": playlist_id}, {"$set": {"added": "yes"}}, upsert=True)
             
