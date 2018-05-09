@@ -21,19 +21,19 @@
                 
 <div class="tab-content" id="myTabContent">
     
-  <div class="tab-pane fade show active" id="{{ video }}" role="tabpanel" aria-labelledby="home-tab">
+  <div class="tab-pane fade show active" id="{{ video }}" role="tabpanel" aria-label="home-tab">
     
     <div class="embed-responsive embed-responsive-16by9 single-video"> 
-      <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{ video }}?rel=0&autoplay=1&showinfo=0" frameborder="0" allowfullscreen></iframe>
+      <iframe title="YouTube embed" width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{ video }}?rel=0&autoplay=1&showinfo=0" frameborder="0" allowfullscreen></iframe>
     </div>
     
     </div>
     <!-- start loop -->
 {% for video in videos[:5] %}
-  <div class="tab-pane fade" id="{{ video.video_id }}" role="tabpanel" aria-labelledby="profile-tab">
+  <div class="tab-pane fade" id="{{ video.video_id }}" role="tabpanel" aria-label="video-tab">
     
     <div class="embed-responsive embed-responsive-16by9 single-video"> 
-      <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?rel=0&autoplay=1&showinfo=0" frameborder="0" allowfullscreen></iframe>
+      <iframe title="YouTube embed" width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?rel=0&autoplay=1&showinfo=0" frameborder="0" allowfullscreen></iframe>
     </div>
     
     
@@ -46,12 +46,12 @@
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     
   <li class="nav-item">
-    <a class="nav-link active" id="{{ video }}-tab" data-toggle="tab" href="#{{ video }}" role="tab" aria-controls="home" aria-selected="true"><img src="http://img.youtube.com/vi/{{ video }}/mqdefault.jpg" class="rounded"></a>
+    <a class="nav-link active" id="{{ video }}-tab" data-toggle="tab" href="#{{ video }}" role="tab" aria-controls="home" aria-selected="true"><img src="http://img.youtube.com/vi/{{ video }}/mqdefault.jpg" alt="Video thumbnail" class="rounded"></a>
   </li>
     <!-- start loop -->
     {% for video in videos[:6] %}
   <li class="nav-item">
-    <a class="nav-link" id="{{ video.video_id }}-tab" data-toggle="tab" href="#{{ video.video_id }}" role="tab" aria-controls="profile" aria-selected="false"><img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg" class="rounded"></a>
+    <a class="nav-link" id="{{ video.video_id }}-tab" data-toggle="tab" href="#{{ video.video_id }}" role="tab" aria-controls="profile" aria-selected="false"><img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg"  alt="Video thumbnail" class="rounded"></a>
   </li>
   {% endfor %}
     <!-- end loop -->

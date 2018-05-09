@@ -38,8 +38,14 @@ def page_not_found(e):
 @app.route('/')
 @app.route('/index')
 def index():
-    videos = list(db.videos.find({}).sort("video_id", -1))
-    keen.add_event("view", {"page": "home"})
+    choose_method = ["popular", "trending"]
+    method = random.choice(choose_method)
+    if method == "popular":
+        timeframe = "this_1_years"
+    if method == "trending":
+        timeframe = "this_7_days"
+    keen.add_event("view", { "page": method })  
+    videos = keen.count("video_view", timeframe=timeframe, group_by="page", order_by={"property_name": "result", "direction": keen.direction.ASCENDING})
     return render_template('home.html', videos=videos, playlist_url=playlist_url)
   
 @app.route('/new')

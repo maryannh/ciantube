@@ -12,14 +12,13 @@
 {% block content %}
 <!-- content stuff here -->
 <div class="grid videos random">
-    
-    
+
     
 {% for video in videos[:12] %}
   <div class="item thumb">
        
-   	<a href={{ url_for('video', video=video.video_id) }}>
-			<img src="http://img.youtube.com/vi/{{ video.video_id }}/mqdefault.jpg" class="rounded mx-auto" height=180 width=320>
+   	<a href={{ url_for('video', video=video.page) }}>
+			<img src="http://img.youtube.com/vi/{{ video.page }}/mqdefault.jpg" alt="Video thumbnail" class="rounded mx-auto" height=180 width=320>
        </a>
      </div>
      {% endfor %}

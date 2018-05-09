@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     {% block head %}
      <!-- Required meta tags -->
@@ -49,22 +49,20 @@ window.cookieconsent.initialise({
         
         
        <h1>
-           <span onclick="goBack()"><i class="fas fa-arrow-alt-circle-left"></i></span>
+           <span onclick="goBack()" aria-label="Go back"><i class="fas fa-arrow-alt-circle-left"></i></span>
          <a href={{ url_for('index') }}>CianTube</a> 
-           <a href={{ url_for('index') }}><i class="fas fa-home"></i></a> 
+           <a href={{ url_for('index') }} aria-label="Home"><i class="fas fa-home"></i></a> 
            
-           
-         <a href={{ url_for('popular') }}><i class="fas fa-heart"></i></a>
 
            <a href={{ url_for('new') }}>NEW</i></a>
-        <a href={{ url_for('suggest') }}><i class="fas fa-plus-square"></i></a>
+        <a href={{ url_for('suggest') }} aria-label="Suggest more videos"><i class="fas fa-plus-square"></i></a>
           
          
       </h1>
     </div>
   </nav>
   
-    <div class="container">
+    <div class="container" role="main">
 
    {% with messages = get_flashed_messages() %}
         {% if messages %}
