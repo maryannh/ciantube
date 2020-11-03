@@ -16,20 +16,16 @@ import os
 from furl import furl
 import requests
 from bson.objectid import ObjectId
+import config
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-client = MongoClient('mongodb://maryann:ferrari1357@ds159845.mlab.com:59845/tube')
+client = MongoClient(config.MONGO_URL)
 db = client['tube']
-
-keen.project_id = "5aa05555c9e77c00010a94be"
-keen.write_key = "AAD43B2F5097D6C2178160538A16593FAA95F8C8D5EE2527F4961A21AE83D3355D75AA50B4616A3A1BEA3439153C3AEEBEE67B8A82A9F93BE58B76A2A435E096D860CE17593216BC8E605B18EB74664397BBB07CB60EE9D3640AD0570207283A"
-keen.read_key = "A8B4DC61230BAFC32A7627130B3F702A58FCFD2A96DF525A468ED37E53A857B06E34E454AB9A1FC650B65898DBA58B0E62D18E4531F6D9B95B444B03932A460FD0FD3766FCB81F1F10E2E5623CC9CDB023EE0410C727A7D75928E0FCDC9BD2FB"
 
 playlist_id = "PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
 playlist_url = "https://www.youtube.com/playlist?list=PL1b8owEkl1hbpHBaBVEJqTp1oDs-lilJu"
-api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
 
 @app.errorhandler(404)
 def page_not_found(e):

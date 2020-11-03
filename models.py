@@ -10,15 +10,10 @@ from nltk.tokenize import word_tokenize
 from textblob import TextBlob, Word
 import keen
 from pymongo import MongoClient
+import config
 
-client = MongoClient('mongodb://maryann:ferrari1357@ds159845.mlab.com:59845/tube')
+client = MongoClient(config.MONGO_URL)
 db = client['tube']
-
-keen.project_id = "5aa05555c9e77c00010a94be"
-keen.write_key = "AAD43B2F5097D6C2178160538A16593FAA95F8C8D5EE2527F4961A21AE83D3355D75AA50B4616A3A1BEA3439153C3AEEBEE67B8A82A9F93BE58B76A2A435E096D860CE17593216BC8E605B18EB74664397BBB07CB60EE9D3640AD0570207283A"
-keen.read_key = "A8B4DC61230BAFC32A7627130B3F702A58FCFD2A96DF525A468ED37E53A857B06E34E454AB9A1FC650B65898DBA58B0E62D18E4531F6D9B95B444B03932A460FD0FD3766FCB81F1F10E2E5623CC9CDB023EE0410C727A7D75928E0FCDC9BD2FB"
-
-SECRET_KEY = 's9S7vrcky2Z96Ak0QBUSynFtXj00mQkDwKM6oguktXS4bveJBG'
 
 try:
     random = random.SystemRandom()
@@ -51,7 +46,7 @@ def get_random_string(length=16,
                 ("%s%s%s" % (
                     random.getstate(),
                     time.time(),
-                    SECRET_KEY)).encode('utf-8')
+                    config.SECRET_KEY)).encode('utf-8')
             ).digest())
     return ''.join(random.choice(allowed_chars) for i in range(length))
 
@@ -60,10 +55,9 @@ def get_playlist_api_url(playlist_url, max_result):
     Returns a URL to be used to access YouTube Data API PlaylistItems 
     """
     part = 'contentDetails'
-    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
     url_parts = furl(playlist_url)
     playlist_id = url_parts.args['list']
-    playlist_api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    playlist_api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + part + "&maxResults=" + max_result + "&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + config.YOUTUBE_KEY
     return playlist_api_url
 
 
@@ -71,8 +65,7 @@ def get_playlist_videos(playlist_id):
     """
     Returns a list of videos from a playlist along with the user ID from the database
     """
-    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + api_key
+    api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&playlistId=" + playlist_id + "&fields=items(contentDetails(videoId%2CvideoPublishedAt))&key=" + config.YOUTUBE_KEY
     r = requests.get(api_url)
     data = r.json()
     videos_from_api = list(data['items'])
@@ -87,8 +80,7 @@ def get_description(video_id):
     """
     Returns the description of a video 
     """
-    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    api_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + api_key
+    api_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" + video_id + "&fields=items%2Fsnippet%2Fdescription&key=" + config.YOUTUBE_KEY
     r = requests.get(api_url)
     data = r.json()
     description = None
@@ -114,8 +106,7 @@ def get_youtube_tags(video_id):
     """
     Get the tags from the YouTube API
     """
-    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftags&key=" + api_key
+    api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftags&key=" + config.YOUTUBE_KEY
     r = requests.get(api_url)
     data = r.json()
     youtube_tags = None
@@ -127,8 +118,7 @@ def get_title(video_id):
     """
     Get the title from the YouTube API
     """
-    api_key = "AIzaSyAFPIXRHo1lUTrkKnVAfZRIHO74WBfmq6A"
-    api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftitle&key=" + api_key
+    api_url =  "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + video_id + "&fields=items%2Fsnippet%2Ftitle&key=" + config.YOUTUBE_KEY
     r = requests.get(api_url)
     data = r.json()
     title = None
@@ -140,6 +130,3 @@ def list_to_string(video):
     tags = get_youtube_tags(video)
     tag_string = ' '.join(tags)
     return tag_string
-
-# tags = list_to_string("QA2yjW1XUvA")
-# print(tags)
